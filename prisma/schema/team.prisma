@@ -1,0 +1,12 @@
+model Team {
+  id               String @id @default(cuid())
+  name             String
+  slug             String @unique
+  stripeCustomerId String @unique
+
+  memberships Membership[]
+  invitations Invitation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
