@@ -1,7 +1,21 @@
 'use server';
 
-import {User} from "@prisma/client";
+import {Prisma, User} from "@prisma/client";
 import prisma from "@/lib/db";
+import UserCreateInput = Prisma.UserCreateInput;
+import UserUpdateInput = Prisma.UserUpdateInput;
+
+export async function getUsers(): Promise<User[]> {
+  return prisma.user.findMany();
+}
+
+export async function getUserById(userId: string): Promise<User | null> {
+  return prisma.user.findUnique({
+    where: {
+      id: userId
+    }
+  });
+}
 
 export async function getUserByEmail(email: string): Promise<User | null> {
   return prisma.user.findUnique({
@@ -11,22 +25,25 @@ export async function getUserByEmail(email: string): Promise<User | null> {
   });
 }
 
-export type NewUser = {
-  name: string;
-  email: string;
-};
-
-export async function createUser(user: NewUser) {
-  await prisma.user.create({
+export async function createUser(user: UserCreateInput): Promise<User> {
+  return prisma.user.create({
     data: user
   });
 }
 
-export async function updateUser(userId: string, user: Partial<User>) {
-  await prisma.user.update({
+export async function updateUser(userId: string, user: UserUpdateInput): Promise<User> {
+  return prisma.user.update({
     where: {
       id: userId
     },
     data: user
+  });
+}
+
+export async function deleteUser(userId: string): Promise<void> {
+  await prisma.user.delete({
+    where: {
+      id: userId
+    }
   });
 }
