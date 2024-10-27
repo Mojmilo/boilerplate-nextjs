@@ -14,18 +14,18 @@ export enum PlanInterval {
 }
 
 const plans: Plan[] = [
-    {
-      name: 'Starter Plan',
-      description: 'For small teams or personal use',
-      amount: 9.99,
-      interval: PlanInterval.MONTH,
-      priceId: 'price_1PsW7GIoZQNUASoceBq0VR2G',
-      features: [
-        'Unlimited projects',
-        'Unlimited storage',
-        'Unlimited collaborators'
-      ]
-    },
+  {
+    name: 'Starter Plan',
+    description: 'For small teams or personal use',
+    amount: 9.99,
+    interval: PlanInterval.MONTH,
+    priceId: 'price_1PsW7GIoZQNUASoceBq0VR2G',
+    features: [
+      'Unlimited projects',
+      'Unlimited storage',
+      'Unlimited collaborators'
+    ]
+  },
   {
     name: 'Starter Plan',
     description: 'For small teams or personal use',
