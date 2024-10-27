@@ -12,7 +12,7 @@ export const createTeamAction = authedProcedure.createServerAction()
     slugSchema
   }))
   .handler(async ({input, ctx}) => {
-    const team = await createTeamUseCase(ctx.user, {
+    const team = await createTeamUseCase(ctx.user.id, {
       name: input.nameSchema.name,
       slug: input.slugSchema.slug
     });

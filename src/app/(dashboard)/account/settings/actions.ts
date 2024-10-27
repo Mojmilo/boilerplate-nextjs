@@ -12,7 +12,7 @@ export const updateUserNameAction = authedProcedure
   .createServerAction()
   .input(nameFormSchema)
   .handler(async ({input, ctx}) => {
-    await updateUserNameUseCase(ctx.user, input.name);
+    await updateUserNameUseCase(ctx.user.id, input.name);
 
     revalidatePath('/');
 
@@ -23,7 +23,7 @@ export const updateUserEmailAction = authedProcedure
   .createServerAction()
   .input(emailFormSchema)
   .handler(async ({input, ctx}) => {
-    await updateUserEmailUseCase(ctx.user, input.email);
+    await updateUserEmailUseCase(ctx.user.id, input.email);
 
     revalidatePath('/');
 

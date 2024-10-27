@@ -1,9 +1,9 @@
 'use server';
 
 import {getMembership} from "@/data-access/membership";
+import {Membership} from "@prisma/client";
 
-// * OK
-export async function getMembershipUseCase(userId: string, teamId: string) {
+export async function getMembershipUseCase(userId: string, teamId: string): Promise<Membership> {
   const membership = await getMembership(userId, teamId);
 
   if (!membership) {
@@ -13,15 +13,13 @@ export async function getMembershipUseCase(userId: string, teamId: string) {
   return membership;
 }
 
-// * OK
-export async function isTeamOwnerUseCase(userId: string, teamId: string) {
+export async function isTeamOwnerUseCase(userId: string, teamId: string): Promise<boolean> {
   const membership = await getMembershipUseCase(userId, teamId);
 
   return membership.role === 'OWNER';
 }
 
-// * OK
-export async function hasMembershipUseCase(userId: string, teamId: string) {
+export async function hasMembershipUseCase(userId: string, teamId: string): Promise<boolean> {
   const membership = await getMembership(userId, teamId);
 
   return !!membership;

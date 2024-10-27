@@ -2,17 +2,25 @@
 
 import {isTeamOwnerUseCase} from "@/use-cases/membership";
 import {deleteMembership} from "@/data-access/membership";
-import {createTeam, getTeamById, updateTeam} from "@/data-access/teams";
-import {Team, User} from "@prisma/client";
+import {createTeam, getTeamById} from "@/data-access/teams";
+import {Prisma, Team} from "@prisma/client";
 import {createStripeCustomerUseCase} from "@/use-cases/stripe";
+import TeamCreateManyInput = Prisma.TeamCreateManyInput;
+import {getUserByIdUseCase} from "@/use-cases/users";
 
-type NewTeam = {
-  name: string;
-  slug: string;
+export async function getTeamByIdUseCase(teamId: string): Promise<Team> {
+  const team = await getTeamById(teamId);
+
+  if (!team) {
+    throw new Error('Team not found');
+  }
+
+  return team;
 }
 
-// * OK
-export async function createTeamUseCase(user: User, team: NewTeam) {
+export async function createTeamUseCase(userId: string, team: Omit<TeamCreateManyInput, 'stripeCustomerId'>): Promise<Team> {
+  const user = await getUserByIdUseCase(userId);
+
   const customer = await createStripeCustomerUseCase(user.email);
 
   try {
@@ -22,8 +30,7 @@ export async function createTeamUseCase(user: User, team: NewTeam) {
   }
 }
 
-// * OK
-export async function leaveTeamUseCase(userId: string, teamId: string) {
+export async function leaveTeamUseCase(userId: string, teamId: string): Promise<void> {
   const isOwner = await isTeamOwnerUseCase(userId, teamId);
 
   if (isOwner) {
@@ -35,15 +42,4 @@ export async function leaveTeamUseCase(userId: string, teamId: string) {
   } catch (e) {
     throw new Error('Failed to leave team');
   }
-}
-
-// * OK
-export async function getTeamByIdUseCase(teamId: string) {
-  const team = await getTeamById(teamId);
-
-  if (!team) {
-    throw new Error('Team not found');
-  }
-
-  return team;
 }

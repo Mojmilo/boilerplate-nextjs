@@ -8,9 +8,9 @@ import {
   updateStripeSubscriptionItem
 } from "@/data-access/stripe";
 import {getTeamByIdUseCase} from "@/use-cases/teams";
+import Stripe from "stripe";
 
-// * OK
-export async function createStripeCustomerUseCase(email: string) {
+export async function createStripeCustomerUseCase(email: string): Promise<Stripe.Customer> {
   try {
     return await createStripeCustomer(email);
   } catch (e) {
@@ -18,8 +18,7 @@ export async function createStripeCustomerUseCase(email: string) {
   }
 }
 
-// * OK
-export async function createStripeCheckoutSessionUseCase(stripeCustomerId: string, priceId: string) {
+export async function createStripeCheckoutSessionUseCase(stripeCustomerId: string, priceId: string): Promise<Stripe.Checkout.Session> {
   try {
     return await createStripeCheckoutSession(stripeCustomerId, priceId);
   } catch (e) {
@@ -27,8 +26,7 @@ export async function createStripeCheckoutSessionUseCase(stripeCustomerId: strin
   }
 }
 
-// * OK
-export async function createCheckoutLinkUseCase(teamId: string, priceId: string) {
+export async function createCheckoutLinkUseCase(teamId: string, priceId: string): Promise<string> {
   const team = await getTeamByIdUseCase(teamId);
 
   const subscription = await getStripeSubscription(team.stripeCustomerId);
@@ -46,8 +44,7 @@ export async function createCheckoutLinkUseCase(teamId: string, priceId: string)
   return checkout.url;
 }
 
-// * OK
-export async function getStripeSubscriptionUseCase(stripeCustomerId: string) {
+export async function getStripeSubscriptionUseCase(stripeCustomerId: string): Promise<Stripe.Subscription> {
   const subscription = await getStripeSubscription(stripeCustomerId);
 
   if (!subscription) {
@@ -57,8 +54,7 @@ export async function getStripeSubscriptionUseCase(stripeCustomerId: string) {
   return subscription;
 }
 
-// * OK
-export async function updateStripeSubscriptionItemUseCase(teamId: string, priceId: string) {
+export async function updateStripeSubscriptionItemUseCase(teamId: string, priceId: string): Promise<void> {
   const team = await getTeamByIdUseCase(teamId);
 
   const subscription = await getStripeSubscriptionUseCase(team.stripeCustomerId);
@@ -73,8 +69,7 @@ export async function updateStripeSubscriptionItemUseCase(teamId: string, priceI
   }
 }
 
-// * OK
-export async function updateStripeSubscriptionItemQuantityUseCase(teamId: string, quantity: number) {
+export async function updateStripeSubscriptionItemQuantityUseCase(teamId: string, quantity: number): Promise<void> {
   const team = await getTeamByIdUseCase(teamId);
 
   const subscription = await getStripeSubscriptionUseCase(team.stripeCustomerId);
@@ -88,8 +83,7 @@ export async function updateStripeSubscriptionItemQuantityUseCase(teamId: string
   }
 }
 
-// * OK
-export async function createStripeBillingPortalSessionUseCase(stripeCustomerId: string) {
+export async function createStripeBillingPortalSessionUseCase(stripeCustomerId: string): Promise<Stripe.BillingPortal.Session> {
   try {
     return await createStripeBillingPortalSession(stripeCustomerId);
   } catch (e) {
@@ -97,8 +91,7 @@ export async function createStripeBillingPortalSessionUseCase(stripeCustomerId: 
   }
 }
 
-// * OK
-export async function createBillingPortalLinkUseCase(teamId: string) {
+export async function createBillingPortalLinkUseCase(teamId: string): Promise<string> {
   const team = await getTeamByIdUseCase(teamId);
 
   const billingPortal = await createStripeBillingPortalSessionUseCase(team.stripeCustomerId);

@@ -1,10 +1,21 @@
 'use server';
 
-import {updateUser} from "@/data-access/users";
+import {getUserById, updateUser} from "@/data-access/users";
 import {Prisma, User} from "@prisma/client";
 
-// * OK
-export async function updateUserNameUseCase(user: User, name: string) {
+export async function getUserByIdUseCase(teamId: string): Promise<User> {
+  const team = await getUserById(teamId);
+
+  if (!team) {
+    throw new Error('User not found');
+  }
+
+  return team;
+}
+
+export async function updateUserNameUseCase(userId: string, name: string): Promise<void> {
+  const user = await getUserByIdUseCase(userId);
+
   try {
     await updateUser(user.id, {
       name
@@ -14,8 +25,9 @@ export async function updateUserNameUseCase(user: User, name: string) {
   }
 }
 
-// * OK
-export async function updateUserEmailUseCase(user: User, email: string) {
+export async function updateUserEmailUseCase(userId: string, email: string): Promise<void> {
+  const user = await getUserByIdUseCase(userId);
+
   try {
     await updateUser(user.id, {
       email

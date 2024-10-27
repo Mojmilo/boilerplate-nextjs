@@ -2,8 +2,7 @@
 
 import {deleteSession} from "@/data-access/session";
 
-// * OK
-export async function deleteSessionUseCase(sessionToken: string) {
+export async function deleteSessionUseCase(sessionToken: string): Promise<void> {
   try {
     await deleteSession(sessionToken);
   } catch (error) {

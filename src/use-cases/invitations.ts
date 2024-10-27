@@ -2,12 +2,11 @@
 
 import {createInvitation, deleteInvitation, getInvitation} from "@/data-access/invitations";
 import {createMembership} from "@/data-access/membership";
-import {User} from "@prisma/client";
+import {Invitation, User} from "@prisma/client";
 import {hasMembershipUseCase, isTeamOwnerUseCase} from "@/use-cases/membership";
 import {getUserByEmail} from "@/data-access/users";
 
-// * OK
-export async function getInvitationUseCase(teamId: string, email: string) {
+export async function getInvitationUseCase(teamId: string, email: string): Promise<Invitation> {
   const invitation = await getInvitation(teamId, email);
 
   if (!invitation) {
@@ -17,8 +16,7 @@ export async function getInvitationUseCase(teamId: string, email: string) {
   return invitation;
 }
 
-// * OK
-export async function acceptInvitationUseCase(user: User, teamId: string) {
+export async function acceptInvitationUseCase(user: User, teamId: string): Promise<void> {
   const invitation = await getInvitationUseCase(teamId, user.email);
 
   try {
@@ -30,8 +28,7 @@ export async function acceptInvitationUseCase(user: User, teamId: string) {
   }
 }
 
-// * OK
-export async function declineInvitationUseCase(user: User, teamId: string) {
+export async function declineInvitationUseCase(user: User, teamId: string): Promise<void> {
   const invitation = await getInvitationUseCase(teamId, user.email);
 
   try {
@@ -41,8 +38,7 @@ export async function declineInvitationUseCase(user: User, teamId: string) {
   }
 }
 
-// * OK
-export async function inviteUserUseCase(authenticatedUser: User, teamId: string, email: string) {
+export async function inviteUserUseCase(authenticatedUser: User, teamId: string, email: string): Promise<void> {
   const isTeamOwner = await isTeamOwnerUseCase(authenticatedUser.id, teamId);
 
   if (!isTeamOwner) {
@@ -69,8 +65,7 @@ export async function inviteUserUseCase(authenticatedUser: User, teamId: string,
   }
 }
 
-// * OK
-export async function cancelInvitationUseCase(invitationId: string) {
+export async function cancelInvitationUseCase(invitationId: string): Promise<void> {
   try {
     await deleteInvitation(invitationId);
   } catch (e) {

@@ -1,9 +1,10 @@
 'use server';
 
 import prisma from "@/lib/db";
-import {Team} from "@prisma/client";
+import {Prisma, Team} from "@prisma/client";
+import TeamCreateManyInput = Prisma.TeamCreateManyInput;
 
-export async function getTeamById(teamId: string) {
+export async function getTeamById(teamId: string): Promise<Team | null> {
   return prisma.team.findUnique({
     where: {
       id: teamId
@@ -11,37 +12,7 @@ export async function getTeamById(teamId: string) {
   });
 }
 
-export async function getTeamsByUser(userId: string) {
-  return prisma.team.findMany({
-    where: {
-      memberships: {
-        some: {
-          userId
-        }
-      }
-    }
-  });
-}
-
-export async function getTeamsByInvitation(email: string) {
-  return prisma.team.findMany({
-    where: {
-      invitations: {
-        some: {
-          email
-        }
-      }
-    }
-  });
-}
-
-type NewTeam = {
-  name: string;
-  slug: string;
-  stripeCustomerId: string;
-}
-
-export async function createTeam(userId: string, team: NewTeam) {
+export async function createTeam(userId: string, team: TeamCreateManyInput): Promise<Team> {
   return prisma.team.create({
     data: {
       ...team,
@@ -55,11 +26,35 @@ export async function createTeam(userId: string, team: NewTeam) {
   });
 }
 
-export async function updateTeam(teamId: string, team: Partial<Team>) {
-  await prisma.team.update({
+export async function updateTeam(teamId: string, team: Partial<Team>): Promise<Team> {
+  return prisma.team.update({
     where: {
       id: teamId
     },
     data: team
+  });
+}
+
+export async function getTeamsByUser(userId: string): Promise<Team[]> {
+  return prisma.team.findMany({
+    where: {
+      memberships: {
+        some: {
+          userId
+        }
+      }
+    }
+  });
+}
+
+export async function getTeamsByInvitation(email: string): Promise<Team[]> {
+  return prisma.team.findMany({
+    where: {
+      invitations: {
+        some: {
+          email
+        }
+      }
+    }
   });
 }
