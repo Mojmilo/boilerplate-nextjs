@@ -1,11 +1,11 @@
 import MembershipRow from "@/app/(dashboard)/account/_components/memberships/membership-row";
 import React from "react";
 import {getCurrentUser} from "@/lib/session";
-import {getMembershipsWithTeamInfoByUser} from "@/data-access/membership";
+import {getMembershipsWithTeamInfoFromUser} from "@/data-access/membership";
 
 export default async function MembershipList() {
   const user = await getCurrentUser();
-  const memberships = await getMembershipsWithTeamInfoByUser(user.id);
+  const memberships = await getMembershipsWithTeamInfoFromUser(user.id);
 
   return (
     <div className="flex flex-col items-center justify-center w-full bg-card divide-y border rounded-md">

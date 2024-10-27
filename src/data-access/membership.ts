@@ -22,7 +22,7 @@ export type MembershipWithTeamInfo = Membership & {
   }
 }
 
-export async function getMembershipsWithTeamInfoByUser(userId: string) {
+export async function getMembershipsWithTeamInfoFromUser(userId: string) {
   return prisma.membership.findMany({
     where: {
       userId

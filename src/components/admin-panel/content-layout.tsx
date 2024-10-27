@@ -1,6 +1,6 @@
 import { Navbar } from "@/components/admin-panel/navbar";
 import {getCurrentUser} from "@/lib/session";
-import {getMembershipsWithTeamInfoByUser} from "@/data-access/membership";
+import {getMembershipsWithTeamInfoFromUser} from "@/data-access/membership";
 
 interface ContentLayoutProps {
   title: string;
@@ -9,7 +9,7 @@ interface ContentLayoutProps {
 
 export async function ContentLayout({ title, children }: ContentLayoutProps) {
   const user = await getCurrentUser();
-  const memberships = await getMembershipsWithTeamInfoByUser(user.id);
+  const memberships = await getMembershipsWithTeamInfoFromUser(user.id);
 
   return (
     <div>
